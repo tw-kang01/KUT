@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "tokens_per_utf8_byte": 0.35,
+  "minimum_tokens_per_byte": 0.1,
+  "maximum_tokens_per_byte": 1.0,
+  "safety_multiplier": 1.3,
+  "ema_alpha": 0.2,
+  "token_overhead": 32,
+  "request_max_bytes": 262144,
+  "max_messages": 128,
+  "recent_turns": 6,
+  "project_memory_enabled": true,
+  "session_max_turns": 8,
+  "session_rotate_estimated_tokens": 12000,
+  "carryover_max_chars": 6000,
+  "project_memory_max_entries": 8,
+  "project_memory_archive_max_bytes": 4194304,
+  "project_memory_archive_max_turns": 2048
+}

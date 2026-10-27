@@ -1,0 +1,18 @@
+{
+  "FileVersion": 3,
+  "Version": 1,
+  "VersionName": "0.1.0",
+  "FriendlyName": "KHU UE Tutor",
+  "Description": "KHU UE Tutor: ChatKHU agent with local editor tools.",
+  "Category": "Education",
+  "CreatedBy": "KHU",
+  "EngineVersion": "5.8.0",
+  "CanContainContent": false,
+  "Modules": [
+    { "Name": "KHUTutorTools", "Type": "Editor", "LoadingPhase": "PostEngineInit", "PlatformAllowList": ["Win64"] },
+    { "Name": "KHUTutor", "Type": "Editor", "LoadingPhase": "PostEngineInit", "PlatformAllowList": ["Win64"] }
+  ],
+  "Plugins": [
+    { "Name": "ToolsetRegistry", "Enabled": true }
+  ]
+}

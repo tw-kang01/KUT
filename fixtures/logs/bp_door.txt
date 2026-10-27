@@ -1,0 +1,5 @@
+995|Display|LogBlueprint|Compiling BP_Door_Broken
+996|Warning|LogSlate|Font fallback noise
+997|Error|LogBlueprint|C:\Users\Student\TutorSandbox\Content\BP_Door_Broken: Target must have a connection
+998|Display|LogBlueprint|Compilation stopped
+999|Warning|LogBlueprint|Unused node

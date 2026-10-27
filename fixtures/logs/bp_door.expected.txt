@@ -1,0 +1,5 @@
+LOG since=600s min=Warning matched=4 groups=4 shown=4 omitted=0 noise=1
+CTX D LogBlueprint: Compiling BP_Door_Broken
+E LogBlueprint: C:\Users\***\TutorSandbox\Content\BP_Door_Broken: Target must have a connection
+CTX D LogBlueprint: Compilation stopped
+W LogBlueprint: Unused node

@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "read": [
+    "KHUTutorTools.KHUTutorReadToolset.Ping",
+    "KHUTutorTools.KHUTutorReadToolset.GetTutorContext",
+    "KHUTutorTools.KHUTutorReadToolset.GetLogDigest",
+    "KHUTutorTools.KHUTutorReadToolset.GetBlueprintCompileErrors",
+    "KHUTutorTools.KHUTutorReadToolset.GetCppBuildErrors",
+    "KHUTutorTools.KHUTutorReadToolset.ReadProjectSource",
+    "KHUTutorTools.KHUTutorReadToolset.GetBlueprintGraphDigest",
+    "KHUTutorTools.KHUTutorReadToolset.GetActorRelations",
+    "KHUTutorTools.KHUTutorReadToolset.GetObjectDetails"
+  ],
+  "show": [
+    "KHUTutorTools.KHUTutorShowToolset.FocusActor",
+    "KHUTutorTools.KHUTutorShowToolset.OpenAssetEditor",
+    "KHUTutorTools.KHUTutorShowToolset.FocusGraphNode"
+  ],
+  "act": [],
+  "epic_t2_extra": [],
+  "never": [
+    "*python*",
+    "*execute*",
+    "*console*",
+    "*command*",
+    "*shell*",
+    "*delete*",
+    "*remove_asset*"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "scope": "development_verification",
+  "paid_calls_authorized": true,
+  "cumulative_credit_limit": null,
+  "spent_verified_credits": 0,
+  "gateway_rounded_spend": 0,
+  "unlimited_authorized": true,
+  "allowed_models": [
+    "claude-opus-5-5",
+    "claude-sonnet-5-5"
+  ]
+}

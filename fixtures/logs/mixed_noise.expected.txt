@@ -1,0 +1,7 @@
+LOG since=600s min=Warning matched=6 groups=6 shown=6 omitted=0 noise=1
+CTX D LogTemp: Before failure
+W LogTemp: Actor Foo 12
+E LogSlate: Real renderer failed
+CTX L LogTemp: Trying C:/Users/***/Project/File.cpp
+W LogTemp: key=<key-redacted>
+W LogTemp: Actor foo 13

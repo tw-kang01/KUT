@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "panel_enabled": true,
+  "tier": "T1",
+  "executable": "",
+  "timeout_seconds": 180,
+  "context_tokens": 20000,
+  "prompt_cache_ttl": "1h"
+}

@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "responses": [
+    {
+      "choices": [
+        {
+          "message": {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "id": "call_1",
+                "type": "function",
+                "function": {
+                  "name": "KHUTutorTools_KHUTutorReadToolset_GetLogDigest",
+                  "arguments": "{\"minSeverity\": \"Warning\", \"sinceSeconds\": 600, \"maxLines\": 40}"
+                }
+              }
+            ]
+          },
+          "finish_reason": "tool_calls"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 100,
+        "completion_tokens": 20
+      }
+    },
+    {
+      "choices": [
+        {
+          "message": {
+            "role": "assistant",
+            "content": null,
+            "tool_calls": [
+              {
+                "id": "call_2",
+                "type": "function",
+                "function": {
+                  "name": "KHUTutorTools_KHUTutorReadToolset_GetBlueprintGraphDigest",
+                  "arguments": "{\"assetPath\": \"/Game/KHUTest/BP_Door_Broken\", \"graphName\": \"\", \"focus\": \"errors\", \"maxNodes\": 20, \"hops\": 2}"
+                }
+              }
+            ]
+          },
+          "finish_reason": "tool_calls"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 100,
+        "completion_tokens": 20
+      }
+    },
+    {
+      "choices": [
+        {
+          "message": {
+            "role": "assistant",
+            "content": "로그와 그래프에서 같은 Target 오류를 확인했습니다."
+          },
+          "finish_reason": "stop"
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 100,
+        "completion_tokens": 20,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      }
+    }
+  ]
+}

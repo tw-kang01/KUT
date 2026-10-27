@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "noise_categories": [
+    "LogSlate",
+    "LogRenderer",
+    "LogRHI",
+    "LogShaderCompilers",
+    "LogKHUTutorMcp",
+    "LogModelContextProtocol"
+  ]
+}

@@ -1,0 +1,3 @@
+997|Error|LogScript|Accessed None item 17 at 0x100
+998|Error|LogScript|Accessed None item 18 at 0x200
+999|Warning|LogTemp|Authorization: Bearer FAKE_TOKEN_ONLY

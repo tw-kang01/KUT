@@ -1,0 +1,3 @@
+Command line: UnrealBuildTool.dll TutorSandboxEditor Win64 Development -Project=C:/KHU/TutorSandbox/TutorSandbox.uproject
+C:\KHU\TutorSandbox\Source\TutorSandbox\KHUBrokenActor.h(15): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int
+Result: Failed (OtherCompilationError)

@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "tiers": {
+    "T1": {
+      "chain": [
+        "claude-sonnet-5-5"
+      ],
+      "max_iters": 3,
+      "input_budget": 20000,
+      "reasoning_effort": "low",
+      "api": "chat_completions"
+    },
+    "T2": {
+      "chain": [
+        "claude-sonnet-5-5"
+      ],
+      "max_iters": 5,
+      "input_budget": 20000,
+      "temperature": 0.2,
+      "reasoning_effort": "low",
+      "api": "chat_completions"
+    },
+    "D7": {
+      "chain": [
+        "claude-opus-5-5"
+      ],
+      "max_iters": 5,
+      "input_budget": 20000,
+      "temperature": 0.2
+    },
+    "H1": {
+      "chain": [
+        "claude-haiku-5-5"
+      ],
+      "max_iters": 3,
+      "input_budget": 20000,
+      "reasoning_effort": "low",
+      "api": "chat_completions",
+      "output_tokens": 3000
+    }
+  },
+  "disabled_patterns": [
+    "claude-opus-*",
+    "gpt-*",
+    "gemini-*",
+    "solar-*"
+  ],
+  "tool_calling_verified_models": [
+    "claude-opus-5-5",
+    "claude-sonnet-5-5"
+  ]
+}

@@ -1,0 +1,163 @@
+{
+	"iterations": 1,
+	"usage": [
+		{
+			"model": "claude-sonnet-5-5",
+			"mock": false,
+			"task_id": "E4335B4E4DF878910E616C9FC0687011",
+			"request_id": "E4335B4E4DF878910E616C9FC0687011:1",
+			"success": true,
+			"attempts": 1,
+			"http_status": 0,
+			"runtime":
+			{
+				"backend": "claude_code_chatkhu",
+				"session_id": "5ccc55c6-476a-4fe4-04b2-94bb18a6f96f",
+				"resumed": false,
+				"mcp_connected": true,
+				"only_tutor_tools": true,
+				"tool_count": 11
+			},
+			"usage_known": true,
+			"input_tokens": 16642,
+			"output_tokens": 515,
+			"cached_tokens": 2346,
+			"cache_write_tokens": 14292,
+			"cache_write_1h_tokens": 14292,
+			"credits_estimate": 62.795199999999994,
+			"unverified_attempt_reserve": 0,
+			"calibration_observed": false
+		}
+	],
+	"tools": [],
+	"text": "합성 코드라서 에디터나 프로젝트 파일은 읽지 않았습니다. 지금 보여 주신 `First` 함수 한 줄만 보고 답합니다.\n\n**읽어 볼 위치 (L1):**\n- `return Values[0];` 안의 `[0]` 부분만 보세요. 이 한 곳이 이 함수가 `Values`에 기대하는 조건을 정합니다.\n- 함수 시그니처 `const TArray<int32>& Values`도 같이 보세요. 호출하는 쪽이 무엇을 넘길 수 있는지, 이 줄 어디에도 그 제한이 적혀 있지 않은지 살펴보면 됩니다.\n\n**확인할 점:**\n- 컴파일러가 이 코드에서 확인해 주는 것(타입이 맞는지)과, 실행할 때 `Values`의 상태에 따라 달라지는 것을 나눠서 적어 보세요.\n- 아직 수정이나 실행을 하지 않으셨으니, 지금 상태는 코드를 읽은 단계입니다. 빌드나 실행 결과는 없습니다.",
+	"cost_known": true,
+	"budget_reserved_or_estimated": 127.94319999999999,
+	"development": true,
+	"task_id": "E4335B4E4DF878910E616C9FC0687011",
+	"pause_reason": "",
+	"can_continue": false,
+	"task_allowance": 4000,
+	"development_unlimited": true,
+	"task_hard_limit": null,
+	"budget_scope": "current_task_estimated_policy; account monthly limits managed by ChatKHU",
+	"context": [
+		{
+			"task_id": "E4335B4E4DF878910E616C9FC0687011",
+			"request_id": "E4335B4E4DF878910E616C9FC0687011:1",
+			"model": "claude-sonnet-5-5",
+			"input_utf8_bytes": 40927,
+			"estimated_input_tokens": 18654,
+			"input_token_limit": 20000,
+			"omitted_turns": 0,
+			"segments":
+			{
+				"system":
+				{
+					"utf8_bytes": 25926,
+					"estimated_tokens": 11797
+				},
+				"tools":
+				{
+					"utf8_bytes": 4421,
+					"estimated_tokens": 2012
+				},
+				"ctx_static":
+				{
+					"utf8_bytes": 0,
+					"estimated_tokens": 0
+				},
+				"history":
+				{
+					"utf8_bytes": 2771,
+					"estimated_tokens": 1261
+				},
+				"ctx_log":
+				{
+					"utf8_bytes": 0,
+					"estimated_tokens": 0
+				},
+				"ctx_graph":
+				{
+					"utf8_bytes": 0,
+					"estimated_tokens": 0
+				},
+				"ctx_other":
+				{
+					"utf8_bytes": 0,
+					"estimated_tokens": 0
+				},
+				"tool_result":
+				{
+					"utf8_bytes": 0,
+					"estimated_tokens": 0
+				},
+				"user":
+				{
+					"utf8_bytes": 7618,
+					"estimated_tokens": 3467
+				}
+			},
+			"dispatched": true
+		}
+	],
+	"cancelled_requests_billing_unknown": [],
+	"conversation_segment": 1,
+	"project_memory_enabled": true,
+	"project_memory_save_failed": false,
+	"project_memory_error": "",
+	"learning_coach":
+	{
+		"version": 1,
+		"paused": false,
+		"events": [
+			{
+				"stage": "predict",
+				"action": "predict",
+				"trigger": "none",
+				"report": "none",
+				"source": "u2",
+				"quote": "아직 수정하거나 실행하지 않았어요.",
+				"items": [
+					{
+						"item": "observation",
+						"status": "unknown",
+						"source": "u2",
+						"quote": "아직 수정하거나 실행하지 않았어요."
+					}
+				],
+				"hint": 1,
+				"id": "A55FD5BE4AE52525CA2F59BA2F029F7E",
+				"status": "proposed"
+			}
+		],
+		"review":
+		{
+			"stage": "predict",
+			"action": "predict",
+			"trigger": "none",
+			"report": "none",
+			"source": "u2",
+			"quote": "아직 수정하거나 실행하지 않았어요.",
+			"items": [
+				{
+					"item": "observation",
+					"status": "unknown",
+					"source": "u2",
+					"quote": "아직 수정하거나 실행하지 않았어요."
+				}
+			],
+			"hint": 1,
+			"id": "A55FD5BE4AE52525CA2F59BA2F029F7E",
+			"status": "proposed"
+		}
+	},
+	"fixture_question": "같은 코드에서 읽어 볼 위치만 알려 주세요. 아직 수정하거나 실행하지 않았어요.",
+	"fixture_hint": 1,
+	"fixture_tier": "T1",
+	"raw_response": "합성 코드라서 에디터나 프로젝트 파일은 읽지 않았습니다. 지금 보여 주신 `First` 함수 한 줄만 보고 답합니다.\n\n**읽어 볼 위치 (L1):**\n- `return Values[0];` 안의 `[0]` 부분만 보세요. 이 한 곳이 이 함수가 `Values`에 기대하는 조건을 정합니다.\n- 함수 시그니처 `const TArray<int32>& Values`도 같이 보세요. 호출하는 쪽이 무엇을 넘길 수 있는지, 이 줄 어디에도 그 제한이 적혀 있지 않은지 살펴보면 됩니다.\n\n**확인할 점:**\n- 컴파일러가 이 코드에서 확인해 주는 것(타입이 맞는지)과, 실행할 때 `Values`의 상태에 따라 달라지는 것을 나눠서 적어 보세요.\n- 아직 수정이나 실행을 하지 않으셨으니, 지금 상태는 코드를 읽은 단계입니다. 빌드나 실행 결과는 없습니다.\n\n<khu_review>{\"stage\":\"predict\",\"action\":\"predict\",\"trigger\":\"none\",\"report\":\"none\",\"source\":\"u2\",\"quote\":\"아직 수정하거나 실행하지 않았어요.\",\"items\":[{\"item\":\"observation\",\"status\":\"unknown\",\"source\":\"u2\",\"quote\":\"아직 수정하거나 실행하지 않았어요.\"}]}</khu_review>",
+	"review_display": "관찰 · 판단 근거 부족\n  아직 확인된 내용이 없어서 판단을 보류했어요.",
+	"action_display": "직접 실행하기 전에 어떤 결과가 나올지 한 가지 예상해 보세요. 관찰한 결과와 비교하면 생각이 달라진 지점을 찾을 수 있어요.",
+	"notice_display": "",
+	"control_sent": "none"
+}

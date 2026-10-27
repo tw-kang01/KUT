@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "semester_total": 4000,
+  "per_task_soft": 4000,
+  "per_task_hard": 4000,
+  "daily_soft": 150,
+  "reserve": 200,
+  "warn_at_remaining": [
+    1000,
+    500,
+    200
+  ]
+}

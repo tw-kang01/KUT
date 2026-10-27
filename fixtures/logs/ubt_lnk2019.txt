@@ -1,0 +1,4 @@
+Command line: UnrealBuildTool.dll TutorSandboxEditor Win64 Development -Project=C:/KHU/TutorSandbox/TutorSandbox.uproject
+C:\KHU\TutorSandbox\Intermediate\Build\KHUBrokenActor.cpp.obj : error LNK2019: unresolved external symbol CreateWidget referenced in function BeginPlay
+C:\KHU\TutorSandbox\Binaries\Win64\UnrealEditor-TutorSandbox.dll : fatal error LNK1120: 1 unresolved externals
+Result: Failed (OtherCompilationError)

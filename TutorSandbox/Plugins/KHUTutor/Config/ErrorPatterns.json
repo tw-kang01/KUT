@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "patterns": [
+    {
+      "id": "bp_target_unconnected",
+      "kind": "bp",
+      "match": [
+        "Target must have a connection"
+      ],
+      "title": "Target 핀이 비어 있어요",
+      "hints": {
+        "L0": "이 노드는 '무엇을' 움직이거나 바꾸려는 걸까요? 그 대상이 어디서 들어와야 할까요?",
+        "L1": "오류 노드의 `Target` 핀이 연결되지 않았어요. 바꾸려는 컴포넌트(예: `DoorMesh`)를 찾아보세요.",
+        "L2": "`Components` 패널에서 대상 컴포넌트를 그래프로 드래그해 Get 노드를 만들고, 그 출력을 `Target` 핀에 연결하세요.",
+        "L3": "1) `Components` 패널에서 대상 컴포넌트 선택 2) 그래프로 드래그 → Get 노드 생성 3) 출력 핀을 오류 노드의 `Target`에 연결 4) `Compile`. 이유: 이 블루프린트(self)는 SceneComponent가 아니라서 어떤 컴포넌트에 적용할지 지정해야 해요."
+      },
+      "links": []
+    },
+    {
+      "id": "bp_accessed_none",
+      "kind": "runtime",
+      "match": [
+        "Accessed None trying to read property (\\w+)",
+        "Accessed None"
+      ],
+      "title": "비어 있는 참조를 사용했어요",
+      "hints": {
+        "L0": "그 변수에는 언제, 어디서 값이 들어가나요? 사용되는 시점보다 먼저인가요?",
+        "L1": "오류에 나온 변수가 아직 아무것도 가리키지 않는 상태(None)에서 쓰였어요. 그 변수를 Set 하는 곳을 찾아보세요.",
+        "L2": "변수를 쓰기 전에 `Is Valid` 노드로 확인하거나, `Details`에서 `Instance Editable`로 노출해 레벨에서 값을 지정하세요.",
+        "L3": "1) 변수 이름으로 그래프 검색(Ctrl+F) 2) Set 노드가 없다면 BeginPlay 등에서 값 할당 3) 레벨 배치 액터라면 변수에 `Instance Editable` 체크 후 `Details`에서 대상 지정 4) 사용 직전 `Is Valid`로 분기."
+      },
+      "links": []
+    },
+    {
+      "id": "cpp_lnk2019",
+      "kind": "cpp",
+      "match": [
+        "LNK2019",
+        "LNK2001"
+      ],
+      "title": "링크 오류: 모듈 의존성 누락 가능성",
+      "hints": {
+        "L0": "이 함수(클래스)는 어느 모듈에 들어 있을까요? 우리 프로젝트가 그 모듈을 쓰겠다고 선언했나요?",
+        "L1": "선언은 찾았지만 구현을 못 찾았어요. 대부분 `<프로젝트>.Build.cs`에 모듈이 빠진 경우예요.",
+        "L2": "오류 심볼의 클래스가 속한 모듈(예: UUserWidget → `UMG`)을 `PublicDependencyModuleNames`에 추가하세요.",
+        "L3": "1) 오류 메시지의 심볼에서 클래스명 확인 2) 해당 클래스 문서/헤더 경로로 모듈명 확인 3) `Source/<프로젝트>/<프로젝트>.Build.cs`의 `PublicDependencyModuleNames.AddRange(...)`에 추가 4) 에디터 종료 후 다시 빌드."
+      },
+      "links": []
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+Command line: UnrealBuildTool.dll TutorSandboxEditor Win64 Development -Project=C:/KHU/TutorSandbox/TutorSandbox.uproject
+C:\KHU\TutorSandbox\Source\TutorSandbox\KHUBrokenActor.cpp(42): error C2065: 'Foo': undeclared identifier
+C:\KHU\TutorSandbox\Source\TutorSandbox\KHUBrokenActor.cpp(42): error C2065: 'Foo': undeclared identifier
+C:\KHU\TutorSandbox\Source\TutorSandbox\KHUBrokenActor.cpp(12): warning C4101: unused local
+Result: Failed (OtherCompilationError)

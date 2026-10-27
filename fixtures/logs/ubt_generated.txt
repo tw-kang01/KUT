@@ -1,0 +1,4 @@
+Command line: UnrealBuildTool.dll TutorSandboxEditor Win64 Development -Project=C:/KHU/TutorSandbox/TutorSandbox.uproject
+C:\KHU\TutorSandbox\Source\TutorSandbox\KHUBrokenActor.h(12): Error: #include found after .generated.h file - the .generated.h file should always be the last #include in a header
+UnrealBuildTool : error : UnrealHeaderTool failed
+Result: Failed (OtherCompilationError)

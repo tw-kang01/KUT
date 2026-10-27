@@ -1,0 +1,2 @@
+# Store every file byte-for-byte: sources are CRLF and prompt/config hashes are checked by scripts/verify_package.ps1.
+* -text

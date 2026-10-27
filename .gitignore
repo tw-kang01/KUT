@@ -1,0 +1,29 @@
+# Unreal Engine generated output (never committed)
+Binaries/
+Intermediate/
+Saved/
+DerivedDataCache/
+Build/
+dist/
+.vs/
+*.sln
+*.slnx
+*.VC.db
+*.VC.opendb
+*.xcodeproj
+*.xcworkspace
+
+# Local runtime, secrets and scratch
+.runtime/
+tmp/
+.env
+**/Saved/KHUTutor/
+*.dpapi
+fixtures/**/*secret*
+
+# Python
+__pycache__/
+*.pyc
+
+# IDE
+.idea/

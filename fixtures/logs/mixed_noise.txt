@@ -1,0 +1,9 @@
+1|Error|LogTemp|Old error outside window
+990|Display|LogTemp|Before failure
+991|Warning|LogTemp|Actor Foo 12
+992|Warning|LogRenderer|Frame noise
+993|Error|LogSlate|Real renderer failed
+994|Log|LogTemp|Trying C:/Users/Kim/Project/File.cpp
+995|Warning|LogTemp|key=baze_FAKE_ONLY_TOKEN
+998|Warning|LogTemp|Actor foo 13
+1001|Error|LogTemp|Future error outside window
