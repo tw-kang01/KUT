@@ -1,93 +1,203 @@
-# KHU UE Tutor (KUT)
+# KHU Unreal Engine Tutor (KUT)
 
-게임엔진기초 수업용 Unreal Engine 5.8 (Win64) 에디터 플러그인. 학생이 에디터 안에서 Blueprint 그래프, 컴파일 오류, 출력 로그, C++ 빌드 오류를 근거로 단계별 힌트(L0~L3)를 받는다. 모델 호출은 학생 개인의 ChatKHU 키로 Claude Code CLI를 통해 이루어지고, 에디터 도구는 읽기·표시 전용이다. 에디터를 대신 조작하거나 코드를 고쳐 주지는 않는다.
+언리얼 에디터 안에서 쓰는 AI 학습 튜터입니다. 과제를 하다 막혔을 때 학생 프로젝트의 Blueprint 그래프와 컴파일 오류, Output Log, C++ 빌드 오류를 직접 읽고 살펴볼 곳을 좁혀 줍니다. 고치고 확인하는 일은 학생에게 남겨 둡니다.
 
-```mermaid
-flowchart LR
-    S[학생 질문 + 선택 노드/그래프 요약] --> P[KHU Tutor 패널]
-    P --> L[FKHUAgentLoop<br/>힌트 정책·문맥 예산·기록]
-    L --> C[claude.exe<br/>ChatKHU 게이트웨이]
-    C -->|tools/call| M[플러그인 루프백 MCP<br/>127.0.0.1]
-    M --> T[읽기 도구 9개 · 표시 도구 3개<br/>로그·그래프·컴파일·소스·액터]
-    T --> M --> C --> L --> P
-    L --> R[(Saved/KHUTutor<br/>대화·학습 기록·키)]
+경희대학교 게임엔진기초 수업의 실습 과제를 기준으로 만들었고, 2026 KHU AI Challenge 출품작입니다. KUT는 '커트'라고 읽습니다. 에디터의 플러그인 목록에는 KHU UE Tutor로, 메뉴에는 KHU Tutor로 나옵니다.
+
+## 배경
+
+이 프로젝트는 게임엔진기초 수업에서 언리얼을 처음 배우며 겪은 어려움에서 시작했습니다. 엔진이 워낙 넓어서 어디서부터 익혀야 할지 감을 잡기 어려웠습니다. Window 메뉴의 최상위 항목만 22개입니다. 과제에서 오류가 나면 에디터가 오류 난 노드나 줄은 알려 주지만, 실행선과 참조, 값 가운데 어디에서 무엇이 틀렸는지 정확히 알기는 어려웠습니다.
+
+도움받을 곳이 없지는 않았습니다. 다만 조교가 수강생 모두의 막힌 곳을 일일이 봐 줄 수는 없었고, 강의 자료나 문서, 검색은 범위가 넓어 무엇부터 찾아봐야 할지 막막했습니다. 범용 챗봇은 답이 지금 쓰는 엔진 버전이나 메뉴와 맞지 않을 때가 있었고, 답을 통째로 받아 따라 하면 배운 것이 남지 않았습니다. 개발을 시작한 10월 2일에 적어 둔 문제 목록에도 같은 내용이 들어 있습니다.
+
+수강생을 대상으로 따로 조사하지는 않았습니다. 다만 낯선 프로그램을 고치는 개발자를 관찰한 연구에서도, 디버깅과 기능 추가 과제를 하는 70분 동안 파일 안팎을 오가는 데만 시간의 평균 35%가 들었고 검색은 오해하기 쉬운 단서 때문에 자주 빗나갔습니다 [1]. 입문자를 대상으로 한 연구는 아닙니다.
+
+AI가 답을 다 주면 배운 것이 남지 않는다는 것은 처음 설계할 때의 판단이었고, 개발하면서 본 연구도 같은 방향이었습니다. 고등학생 약 1,000명을 대상으로 한 현장 실험에서 GPT-4를 제한 없이 쓴 학생들은 연습 문제 성적이 48% 올랐지만, AI 없이 본 시험에서는 AI를 쓰지 않은 학생들보다 17% 낮았습니다. 힌트 위주로 답하도록 만든 튜터는 이 손실을 대부분 줄였습니다 [2]. 수학 수업에서 한 연구라 그대로 옮길 수는 없습니다.
+
+## 설계 원칙
+
+처음 설계할 때 정한 원칙은 두 가지입니다.
+
+1. 살펴볼 곳은 학생 프로젝트의 근거로 좁혀 준다. 튜터는 답하기 전에 허용된 도구로 그래프와 오류, 로그를 먼저 읽고, 무엇을 읽었는지 카드로 남깁니다.
+2. 고치고 확인하는 일과 그 판단은 학생이 한다. 도움을 얼마나 받을지는 학생이 L0~L3 중에서 고르고, 튜터는 코드나 에셋을 바꾸지 않습니다.
+
+도움을 얼마나 줘야 하는지는 교육 연구에서도 오래 다뤄 온 문제입니다. 연구 164편을 모은 메타분석에서는 도움 없이 혼자 발견하게 한 수업은 학습에 이롭지 않았고, 피드백이나 예시, 단계적 도움, 설명 유도를 더한 수업은 이로웠습니다 [3]. KUT가 처음부터 도움을 단계로 나누고 학생이 고르게 한 것도 같은 방향입니다.
+
+엔진 전체를 처음부터 가르치는 것은 목표가 아닙니다. 지금 막힌 과제에서 볼 곳을 좁히는 데서 시작하고, 학습 순서 전체를 짜 주는 일은 범위 밖으로 두었습니다.
+
+## 주요 기능
+
+### 근거 카드와 노드 링크
+
+Blueprint는 스크린샷 대신 노드를 한 줄씩 적은 텍스트(Graph Digest)로 읽습니다. 노드 번호와 연결 상태가 그대로 넘어가기 때문에 답변에도 노드 번호가 나오고, 파란 `#번호`를 누르면 에디터가 그 노드로 이동해 선택합니다. 읽은 그래프는 이런 식으로 넘어갑니다.
+
+```text
+#42 [Call] Possess | exec>#23 | InPawn<#3
+#2 [Call] K2_SetRelativeRotation | exec>none | Target=!UNCONNECTED | ERR "This blueprint (self) is not a SceneComponent, therefore ' Target ' must have a connection."
 ```
+
+`!UNCONNECTED`는 꼭 연결해야 하는 입력이 비어 있다는 뜻입니다. 튜터가 무엇을 읽었는지는 답변 위의 '확인한 근거' 카드에 남습니다.
+
+### 네 가지 도움 수준
+
+| 수준 | 패널에 보이는 이름 | 튜터가 주는 것 |
+|---|---|---|
+| L0 | 질문으로 생각하기 | 답 대신, 지금 아는 것으로 답할 수 있는 확인 질문 하나 |
+| L1 | 위치 힌트 | 살펴볼 위치 |
+| L2 | 부분 단계 | 핵심이 되는 한두 단계와 그 이유 |
+| L3 | 전체 단계 | 이유를 포함한 전체 설명 |
+
+기본은 L1입니다. L0에서는 위치 이동 도구와 노드 링크, 근거 상세를 코드에서 막아 두었고, 답의 내용이 단계를 지키는지는 지침과 응답 검수로 맞춥니다. 합성 대화로 시험해 보니 L0에서 막힌 학생에게 질문만 계속 이어지는 문제가 있어서, '모르겠어요' 같은 답이 두 번 이어지면 L1로 올릴지 묻는 카드를 넣었습니다. 자동으로 올리지는 않습니다. 어느 수준에서든 고치고 실행하는 것은 학생입니다.
+
+### 질문 돌아보기
+
+필요할 때 답변 아래에 '질문 돌아보기' 카드가 붙습니다. 학생이 쓴 말을 인용해서 무엇을 보고 판단했는지, 그것이 도구로 확인한 결과인지 학생이 알려 준 내용인지를 나눠 보여 줍니다. 점수를 매기지는 않습니다. 다음에 무엇을 할지는 학생이 고르고, 자동 코칭은 끌 수 있습니다. 듣기만 할 때보다 스스로 설명을 만들어 낼 때 학습이 커진다는 연구 정리(ICAP) [4]와 같은 방향입니다.
+
+### C++/CS 실습
+
+Blueprint 과제만으로 C++ 실력을 판단할 수는 없어서 C++/CS 실습을 따로 넣었습니다. 기본 6과제(Blueprint에서 C++ 흐름 읽기, 아이템 자료구조 고르기, 조건에 맞는 대상 찾기, AI가 준 C++ 코드 검토, 기능을 컴포넌트로 조합하기, 내 프로젝트에서 검증하기)와, 조건을 바꿔 다시 풀어 보는 6과제가 있습니다. 과제를 고르면 목표와 문제, 내 역할, 검증 기준이 입력창에 채워지고, 코드 작성과 빌드, 경계값 확인은 학생이 합니다. 예를 들어 4번 과제는 AI가 준 `First(Values)` 함수의 입력 가정을 학생이 찾게 합니다. 과제 구성은 넥슨 2026 넥토리얼 모집 요건(C++, CS, AI 코드 검증)을 참고했습니다 [5].
+
+### 학습 기록
+
+패널 위쪽의 '학습 기록' 탭에서 한 과제를 어떻게 풀었는지 세 단계로 정리합니다. 먼저 참고할 대화를 고르고, 시도와 실패, 판단한 이유, 확인한 방법과 결과를 자기 말로 적습니다. 내가 한 일과 AI가 한 일도 나눠 적습니다. 마지막으로 사실과 기여, 개인정보를 확인하고 '기록 복사'로 저장합니다. 기록에 들어간 AI 답변에는 '사실 확인 필요' 표시가 붙습니다. '설명 다듬기'를 누르면 짧은 질문과 참고 자료 카드가 준비되지만, 보내는 것은 학생이 합니다.
+
+## 기존 도구와 다른 점
+
+에디터 안에서 그래프를 설명하거나 학습을 돕는 도구는 이미 있습니다. Epic의 에디터 내장 AI Assistant(UE 5.7, 실험 기능), 에디터 플러그인인 Blueprint Analyst와 Ultimate Engine CoPilot, 별도 앱과 연동하는 GraphDeck 등이 그렇습니다 [6]. KUT가 더한 것은 수업에 맞춘 제약입니다. 에디터를 바꾸는 도구를 두지 않고, 다른 도구가 섞이면 답하지 않습니다. 도움의 양은 학생이 고르고, L0에서는 위치 링크를 코드로 막습니다. 고친 이유와 과정은 학생의 말로 남깁니다. 조교가 일일이 봐 주기 어려운, 막힌 순간의 첫 질문을 돕는 보조 도구로 생각하고 만들었습니다.
+
+## 구현
+
+플러그인은 에디터 모듈 두 개로 나뉩니다.
+
+- `KHUTutorTools`: 에디터 상태를 읽는 센서, 그래프와 로그 요약, AI가 호출하는 도구 모음(Toolset)
+- `KHUTutor`: 설정, 대화 루프, Claude Code 실행 관리, 로컬 MCP 서버, Slate UI
+
+질문을 보내면 패널이 Claude Code CLI(`claude.exe`)를 자식 프로세스로 실행하고, 모델 호출은 학교의 ChatKHU 게이트웨이(Claude Sonnet 5.5)로 나갑니다. 이때 Claude Code의 기본 도구는 모두 끄고(`--tools ""`), 플러그인이 127.0.0.1에 띄우는 전용 MCP 서버의 도구만 쓰게 합니다. 실행할 때 보고된 도구 목록이 튜터 도구와 정확히 같지 않으면 그 답변은 실패로 처리합니다. 학생이 터미널을 열거나 서버를 따로 켤 필요는 없습니다.
+
+튜터가 쓸 수 있는 에디터 도구는 읽기 9개(연결 확인 포함)와 위치 안내 3개이고, 에디터를 바꾸는 도구는 없습니다. 여기에 지난 학습 기록을 찾아 읽는 도구가 2개 있습니다. 도구는 게임 스레드에서 한 번에 하나씩 실행합니다.
+
+API 키는 Windows DPAPI로 암호화해 프로젝트의 `Saved/KHUTutor/`에 저장하고, 대화와 학습 기록, 피드백도 이 폴더에만 남습니다. 모델 ID와 단가, 예산은 코드에 넣지 않고 `Config/*.json`에서 읽으며, 설정 파일이 없거나 값이 범위를 벗어나면 유료 요청을 막고 Mock 응답만 씁니다. 학생 패키지에서는 작업 하나가 240크레딧에 이르면 멈추고 계속할지 묻고, 800크레딧에서는 더 진행하지 않습니다.
+
+변경 대행(L4)은 승인과 되돌리기를 갖춘 선택 기능으로 계획했지만, 요건을 다 갖추지 못해 이번 버전에는 넣지 않았습니다. C++ 소스는 약 14,700줄이고 그중 자동화 테스트가 약 5,200줄입니다. Win64 전용이며 UE 5.8.4에서 빌드하고 테스트했습니다.
+
+## 개발하면서 고친 것
+
+개발 중에는 답변을 직접 읽어 보면서 문제와 위치를 짚는지, 답을 바로 주지 않는지, 다음 행동을 알려 주는지, 앞뒤가 맞는지를 기준으로 점검했습니다. 이 기준은 AI 튜터 평가 틀 [7]의 항목에 해당합니다. 같은 기준으로 별도의 AI 검토 에이전트와 규칙 검사 스크립트도 돌렸고, 실패한 응답은 지우지 않고 남겼습니다. 그중 설계를 바꾼 경우 세 가지를 적어 둡니다.
+
+1. 근거를 읽지 않음. 다른 실전 프로젝트에 넣어 봤을 때 Haiku 5.5의 L1 답변이 자료를 읽지 않고 학생에게 찾아보라고만 했습니다. 지침에 "도움은 적게 주더라도 근거는 먼저 읽는다"는 규칙을 넣고 합성 사례 3건으로 확인했습니다. 실전 재시험은 아직 하지 못했습니다.
+2. 질문이 답을 암시함. L0 질문에 고칠 위치가 들어가는 일이 있어서, L0를 "지금 아는 것으로 답할 수 있는 관찰 질문 하나"로 다시 정했습니다.
+3. 기록에 내부 지시문이 보임. 화면에 보이는 질문과 모델에 보내는 참고 자료를 나눴습니다.
+
+## 확인한 것
+
+### Practice4 시연
+
+수업 실습 과제 Practice4로 처음부터 끝까지 한 번 시연했습니다(10월 27일 녹화). 과제 완성본에서 Possess 노드의 실행선을 일부러 끊어 두면, 숫자 키 2를 눌렀을 때 선택 표시(노란 원)는 GUARD로 옮겨 가는데 실제로 움직이는 유닛은 SCOUT 그대로입니다.
+
+L0로 세 번 묻다가 L1로 바꾸자 튜터가 `#42` 링크로 Possess 노드를 가리켰고, 눌러 보니 실행 핀 양쪽이 비어 있었습니다. Set Selected, Possess, Set Selected 순서로 실행선을 다시 잇고 Play에서 1, 2, 3 키와 마우스 클릭으로 바꿔 보자 선택 표시와 움직이는 유닛이 함께 바뀌었습니다. 고친 뒤에는 '수정했어요, 재확인'으로 그래프를 다시 읽혀 이전 근거와 비교했고, 같은 시연에서 질문 돌아보기와 학습 기록 1단계까지 진행했습니다.
+
+학생 역할은 끊은 위치를 이미 알고 있던 개발자가 맡았고, 한 번 진행한 결과입니다. 처음 보는 학생이 맞는 곳을 찾는지, 더 잘 배우는지는 아직 모릅니다. 답변은 실제 응답이지만, 10월 18일 ChatKHU 크레딧이 바닥난 뒤라 개발용 Claude Code 구독 연결로 받았습니다.
+
+### 점검 결과
+
+| 확인한 것 | 기준 | 판정 | 결과 |
+|---|---|---|---|
+| 회귀 테스트 | UE Automation 테스트에 정해 둔 기대 결과와 같은가 | 자동 | 178개 중 168개 실행, 모두 통과. 나머지 10개는 유료 모델이나 개발용 연결이 있어야 실행 |
+| 배포 후보 | BuildPlugin 패키징, 패키지 파일 검사, 빈 Blueprint 프로젝트에서 로드 | 자동 | rc7 기준 128개 파일 통과 |
+| 과제 적용 | 핵심 Blueprint 컴파일 오류 0, 원본 파일이 바뀌지 않았는가(해시 비교) | 자동 | 과제 사본에서 핵심 Blueprint 7개 컴파일 통과, rc7로 바꿀 때 원본 185개 보존 |
+| 흐름 시연 | 끊은 연결을 고친 뒤 과제가 요구한 동작이 돌아오는가 | Play에서 관찰 | 동작함 (과제 1개, 1회) |
+| L0 질문 규칙 | 초보자가 답할 수 있는 질문 하나인가, 답을 암시하지 않는가, 이미 말한 정보를 다시 묻지 않는가 | AI 검토 에이전트 | 응답 13개 중 2개 위반. 지침을 고친 뒤 같은 두 대화에서 8개 모두 충족 |
+
+테스트 수는 10월 28일, 나머지는 10월 26~27일 기준입니다. L0 질문 규칙은 개발 중에 합성 대화 4개(프로젝트를 읽지 않는 조건, 개발용 연결)로 한 규칙 점검이고, 답변 품질 평가는 아닙니다. 학생의 학습 효과는 이 표에 없습니다.
+
+## 한계
+
+- 학생의 학습 효과는 측정하지 않았습니다. 아직 학생에게 배포하기 전입니다.
+- 처음 보는 사례에서 튜터가 맞는 곳을 가리키는지도 측정하지 않았습니다. 틀린 곳을 가리킬 수 있어서 근거 카드로 학생이 직접 확인하게 했습니다.
+- 답이 도움 수준을 지키는지는 지침과 검수에 기대고 있고, 검수 표본은 대부분 L0였습니다. L3에서는 답을 그대로 따라 할 위험이 남아 있습니다. 학생들이 L3로 몰리는지는 선택 기록으로 확인할 계획입니다.
+- 원래 학생 개인의 ChatKHU 크레딧으로 쓰도록 설계했지만, 크레딧이 넉넉하지 않아 폭넓게 쓰기는 어렵습니다. 학생이 쓰는 Codex나 Claude Code 같은 CLI를 연결하거나 크레딧을 늘리는 방법이 필요합니다. 지금은 Claude Code 연결만 개발용으로 시험했습니다.
+- 10월 18일 이후의 검수와 시연 답변은 개발용 연결로 받았고, 학생 패키지의 ChatKHU 경로로 다시 해 보지는 않았습니다.
+- 문제 제기는 개발자의 수강 경험과 당시 기록, 공개 자료에 근거했습니다. 수강생 설문은 하지 않았습니다.
+- 에디터 화면 조작과 실제 `claude.exe` 호출은 자동화 테스트로 확인하지 않습니다.
+
+## 평가 계획
+
+학생과 함께하는 평가는 연구윤리 심의와 동의를 거쳐, 성적과 분리해서 진행할 계획입니다. 항목마다 이미 쓰이는 도구나 기준을 따릅니다.
+
+| 무엇을 | 방법 | 판정 |
+|---|---|---|
+| 사용성 | SUS 10문항 [8] | 수강생 본인 |
+| 작업 부담 | NASA-TLX [9] | 수강생 본인 |
+| 사용 중 문제 | 입문자 4~5명 사용성 시험(인원 근거 [10]), 생각을 말하며 사용하기 | 관찰자 |
+| 볼 곳 정확도 | 처음 보는 고장 사례를 미리 정해 두고, 튜터가 가리킨 노드를 정답 노드와 대조 | 자동 (학생 없이 가능) |
+| 답변 품질 | AI 튜터 평가 틀 8개 항목 [7]과 도움 수준 지침, 평가자 간 일치도 κ [11] | 개발자가 아닌 평가자 2명 |
+| 질문 습관 | 질문 기록을 미리 정한 기준(관찰한 현상을 적었는지 등)으로 분류, 일치도 κ [11] | 평가자 2명 |
+| 학습 효과 | 사전 검사 뒤 KUT, 범용 챗봇, AI 없음 세 조건으로 나누고, AI 없이 비슷한 오류의 위치를 찾아 고치게 함(정확도, 시간) [2]. 1~2주 뒤 재검사 | 조건을 모르는 채점자 |
+
+답변 품질을 사람이 판정하는 이유는, 이 평가 틀을 제안한 연구에서 LLM 평가자 2종의 판정이 사람의 판정과 잘 맞지 않았기 때문입니다 [7].
+
+## 사용 방법
+
+1. 플러그인을 켠 프로젝트에서 `Window > KHU Tutor`로 패널을 엽니다. Blueprint Editor의 같은 메뉴에서도 열 수 있습니다.
+2. 패널의 설정 화면에서 ChatKHU 키를 저장하고 연결을 확인합니다. 키는 입력할 때 가려지고 이 PC에만 암호화해 저장됩니다.
+3. 입력창 아래에서 도움 수준을 고르고 질문을 보냅니다. 선택한 노드나 지금 열린 그래프의 요약이 함께 전달됩니다.
+4. 답변 위 '확인한 근거' 카드에서 튜터가 무엇을 읽었는지 보고, 파란 `#번호`를 눌러 해당 노드로 갑니다. 고친 뒤에는 Compile과 Play로 직접 확인합니다.
+
+## 빌드와 테스트
+
+필요한 것:
+
+- Windows 10/11 x64, Unreal Engine 5.8 (5.8.4에서 확인). 엔진에 들어 있는 `ToolsetRegistry` 플러그인을 씁니다.
+- Visual Studio 2022 또는 2026과 C++ 게임 개발 워크로드 (`TutorSandbox/.vsconfig` 참고)
+- 실제로 질문하려면 개인 ChatKHU API 키와 Claude Code CLI(`claude.exe`)가 필요합니다. 실행 파일 위치는 `Config/ClaudeRuntime.json`의 `executable`이나 `Edit > Editor Preferences > Plugins > KHU Tutor`에서 정합니다.
+
+```powershell
+# 에디터 타깃 빌드 (TutorSandbox 에디터를 닫은 상태에서)
+.\scripts\build.ps1 -EditorClosed
+
+# 헤드리스 자동화 테스트 (모델 호출 없음)
+.\scripts\test.ps1 -NoMcp
+
+# 학생 배포 후보 패키지를 dist\rc-test에 만들고 검사
+.\scripts\package.ps1 -OutputName rc-test
+.\scripts\smoke_package.ps1 -Package .\dist\rc-test
+.\scripts\test_package.ps1 -Package .\dist\rc-test
+```
+
+`-OutputName`을 빼면 `dist\KHUTutor-UE5.8-Win64-날짜-시각` 폴더가 생깁니다. `smoke_package.ps1`은 새 프로젝트에 패키지를 넣고 헤드리스로 로드해 보고, `test_package.ps1`은 잘못된 설정을 넣은 패키지를 검사가 제대로 거부하는지 확인합니다.
+
+`UE_ROOT`와 `KHU_PROJECT` 환경변수가 없으면 `C:\Program Files\Epic Games\UE_5.8`과 저장소 안의 `TutorSandbox/TutorSandbox.uproject`를 씁니다. `test.ps1`의 `-ClaudeLive`, `-CoachLive`, `-D7Live` 같은 옵션은 실제 모델을 호출해서 크레딧이 듭니다.
+
+패키지 설치 방법과 자주 나는 오류는 [docs/INSTALL_KO.md](docs/INSTALL_KO.md)에 있습니다.
 
 ## 저장소 구성
 
-```
-TutorSandbox/                      UE 5.8 호스트 프로젝트(최소 게임 모듈 + 테스트용 Blueprint 9개)
-  Plugins/KHUTutor/
-    Source/KHUTutorTools/          센서·다이제스트·AICallable 툴셋 (Editor 모듈)
-    Source/KHUTutor/               설정·에이전트 루프·Claude 런타임·MCP·Slate UI (Editor 모듈)
-    Config/                        모델·단가·예산·문맥·도구 화이트리스트·프롬프트
-    Resources/                     아이콘 SVG
-  Content/KHUTest/                 오류를 일부러 넣은 테스트 Blueprint 9개
-templates/Config/                  학생 배포 패키지에 적용하는 설정 (반복 상한·예산)
-scripts/                           빌드·테스트·패키징·패키지 감사 PowerShell
-fixtures/                          자동화 테스트가 읽는 로그·응답 샘플
-docs/                              설치 안내
+```text
+TutorSandbox/              UE 5.8 호스트 프로젝트
+  Plugins/KHUTutor/        플러그인 (Source, Config, Resources)
+  Content/KHUTest/         오류를 일부러 넣은 테스트용 Blueprint 9개
+templates/Config/          학생 패키지에 덮어쓰는 설정 (반복 상한, 예산)
+scripts/                   빌드, 테스트, 패키징 스크립트
+fixtures/                  자동화 테스트가 읽는 로그와 응답 샘플
+docs/INSTALL_KO.md         설치 안내
 ```
 
-## 요구 사항
+## 참고문헌
 
-- Windows 10/11 x64, Unreal Engine 5.8 (5.8.4에서 빌드·테스트), 엔진 내장 플러그인 `ToolsetRegistry`. 제품 경로에는 `ModelContextProtocol` 플러그인이 필요 없다.
-- Visual Studio 2022 또는 2026, C++ 게임 개발 워크로드 (`TutorSandbox/.vsconfig` 참고).
-- 실제 질문을 보내려면 개인 ChatKHU API 키와 로컬에 설치한 Claude Code CLI(`claude.exe`)가 필요하다. 실행 파일 위치는 `Config/ClaudeRuntime.json`의 `executable` 또는 에디터 설정 *Plugins → KHU Tutor* 에서 지정한다. 키는 패널 설정 화면에서 입력하며 Windows DPAPI로 `Saved/KHUTutor/api_key.dpapi`에 저장된다.
+근거로 든 논문은 CCF, CORE, JUFO 같은 공개 등급에서 모두 최상위인 학술지와 학회의 것만 썼습니다. [7]~[9]와 [11]은 평가 도구의 원 출처이고, [5]와 [6]은 공개 자료입니다.
 
-## 빌드·테스트·패키징
-
-```powershell
-# 에디터 타깃 빌드 (TutorSandbox 에디터는 닫은 상태)
-.\scripts\build.ps1 -EditorClosed
-
-# 헤드리스 자동화 테스트 178개, 모델 호출 없음
-.\scripts\test.ps1 -NoMcp
-
-# 학생 배포 후보 패키지 → dist/, 감사와 빈 프로젝트 헤드리스 로드
-.\scripts\package.ps1
-.\scripts\smoke_package.ps1 -Package .\dist\<후보 폴더>
-.\scripts\test_package.ps1 -Package .\dist\<후보 폴더>   # 감사가 잘못된 설정을 거부하는지 확인
-```
-
-`UE_ROOT`와 `KHU_PROJECT` 환경변수를 지정하지 않으면 `C:\Program Files\Epic Games\UE_5.8`과 저장소 안의 `TutorSandbox.uproject`를 사용한다. `test.ps1`의 옵트인 스위치(`-ClaudeLive`, `-CoachLive`, `-D7Live` 등)는 실제 모델을 호출해 크레딧을 쓴다.
-
-## 설정 파일
-
-| 파일 | 내용 |
-|---|---|
-| `Config/Models.json` | 티어별 모델 체인·요청 반복 상한·입력 토큰 예산·API 종류. 학생은 `T1`. 개발 검증용 `D7`/`H1`은 패키징 시 제거된다. |
-| `Config/Pricing.json` | 모델별 USD/1M 토큰 단가와 크레딧 환산 |
-| `Config/Budget.json` | 작업당 soft/hard 크레딧 예산. 학생 값은 `templates/Config/Budget.json` |
-| `Config/Context.json` | 요청 바이트 상한·토큰 추정 비율·문맥 절단·프로젝트 기억 상한 |
-| `Config/Gateway.json` | ChatKHU 주소·출력 토큰 상한·도구 결과 토큰 상한·타임아웃 |
-| `Config/ToolWhitelist.json` | 모델에 노출하는 읽기/표시 도구와 금지 패턴 |
-| `Config/ClaudeRuntime.json` | 패널의 Claude Code 사용 여부·티어·타임아웃·캐시 TTL·실행 파일 |
-| `Config/DevelopmentBudget.json` | 개발 검증용 유료 호출 허용. 학생 패키지에서는 비활성으로 덮어쓴다 |
-| `Config/Prompts/system.txt`, `l0_contract.txt` | 튜터 지침과 L0 답변 규칙 |
-| `Config/LogDigest.json`, `ErrorPatterns.json`, `Mcp.json`, `Scenarios/` | 로그 노이즈 카테고리, 오류 패턴, 개발용 MCP 주소, Mock 시나리오 |
-
-모델 ID·단가·예산은 코드에 넣지 않고 전부 이 파일에서 읽는다. 파일이 없거나 값이 범위를 벗어나면 설정은 무효가 되어 유료 요청이 차단되고 Mock만 동작한다.
-
-## 사용 흐름
-
-1. TutorSandbox(또는 플러그인을 설치한 프로젝트)를 열고 `Window → KHU Tutor` 또는 Blueprint Editor의 같은 메뉴로 패널을 연다.
-2. 설정 화면에서 ChatKHU 키를 저장하고 연결을 확인한다.
-3. 도움 수준을 고른다: L0 질문으로 생각하기 · L1 위치 힌트 · L2 부분 단계 · L3 전체 단계. L4 변경 대행은 없다.
-4. 질문을 보내면 패널이 선택 노드 또는 현재 Graph 요약을 읽어 함께 전달하고, 모델이 읽기 도구를 호출한 영수증이 답변 아래 카드로 남는다.
-5. 대화·학습 기록·피드백은 프로젝트의 `Saved/KHUTutor/`에만 저장된다.
-
-## 제한
-
-- 자동화 테스트 178개는 프로토콜·루프·예산·기록·다이제스트·센서의 회귀 테스트이고, 답변 품질이나 학습 효과를 재지 않는다.
-- 에디터 GUI와 실제 claude.exe 호출은 자동화로 확인하지 않는다.
-- Win64 전용(DPAPI, Windows 프로세스/파이프 API). 학생 배포 방식(Claude Code 제공)은 [docs/INSTALL_KO.md](docs/INSTALL_KO.md) 참고.
-
-## 문서
-
-- [docs/INSTALL_KO.md](docs/INSTALL_KO.md) 후보 패키지 설치와 오류 대응
-- [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 외부 구성 요소와 상표 고지
+1. Ko, A. J., Myers, B. A., Coblenz, M. J., & Aung, H. H. (2006). An exploratory study of how developers seek, relate, and collect relevant information during software maintenance tasks. *IEEE Transactions on Software Engineering*, 32(12), 971–987.
+2. Bastani, H., et al. (2025). Generative AI without guardrails can harm learning: Evidence from high school mathematics. *Proceedings of the National Academy of Sciences*, 122(26), e2422633122.
+3. Alfieri, L., Brooks, P. J., Aldrich, N. J., & Tenenbaum, H. R. (2011). Does discovery-based instruction enhance learning? *Journal of Educational Psychology*, 103(1), 1–18.
+4. Chi, M. T. H., & Wylie, R. (2014). The ICAP framework: Linking cognitive engagement to active learning outcomes. *Educational Psychologist*, 49(4), 219–243.
+5. 넥슨. 2026 넥토리얼 모집 공고.
+6. Epic AI Assistant, Blueprint Analyst, Ultimate Engine CoPilot, GraphDeck 공개 문서. 2026년 10월 확인.
+7. Maurya, K. K., et al. (2025). Unifying AI tutor evaluation: An evaluation taxonomy for pedagogical ability assessment of LLM-powered AI tutors. *Proceedings of NAACL 2025* (Long Papers), 1234–1251.
+8. Brooke, J. (1996). SUS: A "quick and dirty" usability scale. In *Usability Evaluation in Industry* (pp. 189–194). Taylor & Francis.
+9. Hart, S. G., & Staveland, L. E. (1988). Development of NASA-TLX (Task Load Index): Results of empirical and theoretical research. *Advances in Psychology*, 52, 139–183.
+10. Nielsen, J., & Landauer, T. K. (1993). A mathematical model of the finding of usability problems. *Proceedings of INTERCHI '93* (CHI '93), 206–213.
+11. Cohen, J. (1960). A coefficient of agreement for nominal scales. *Educational and Psychological Measurement*, 20(1), 37–46.
 
 ## 라이선스
 
-KHU 자체 코드의 공개 라이선스는 아직 정하지 않았다(LICENSE 파일 없음). 사용·재배포 조건은 저장소 소유자에게 문의한다.
+아직 라이선스를 정하지 않아 LICENSE 파일이 없습니다. 코드를 쓰거나 다시 배포하려면 먼저 문의해 주세요. 외부 구성 요소와 상표 고지는 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)에 있습니다.
