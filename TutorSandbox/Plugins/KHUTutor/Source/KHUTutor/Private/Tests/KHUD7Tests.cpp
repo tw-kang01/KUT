@@ -169,6 +169,21 @@ bool FD7Resume::RunTest(const FString& Parameters)
       AddCommand(new FCheck(this, S, [this, S]() { TestTrue(TEXT("Resumed to final answer"), S->Loop->State() == EKHUAgentState::Idle); TestEqual(TEXT("Completed tool not repeated"), S->Executor->Names.Num(), 1); })); }));
     return true;
 }
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FD7CancelPaused, "KHUTutor.AI.CancelWhilePausedClearsReason", Flags)
+bool FD7CancelPaused::RunTest(const FString& Parameters)
+{
+    auto C = Config(); C.Tiers[TEXT("T1")].MaxIters = 1; auto S = RunScenario(TEXT("scenario_b"), C);
+    AddCommand(new FCheck(this, S, [this, S]()
+    {
+        TestTrue(TEXT("Paused before cancel"), S->Loop->State() == EKHUAgentState::AskContinue);
+        TestEqual(TEXT("Pause reason recorded while paused"), S->Loop->Receipt()->GetStringField(TEXT("pause_reason")), FString(TEXT("iterations")));
+        S->Loop->Cancel();
+        TestTrue(TEXT("Idle after cancel"), S->Loop->State() == EKHUAgentState::Idle); TestFalse(TEXT("Cannot resume after cancel"), S->Loop->CanResume());
+        const auto R = S->Loop->Receipt();
+        TestEqual(TEXT("Pause reason cleared by cancel"), R->GetStringField(TEXT("pause_reason")), FString()); TestFalse(TEXT("No continue offered after cancel"), R->GetBoolField(TEXT("can_continue")));
+    }));
+    return true;
+}
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FD7Blocked, "KHUTutor.AI.BlockedAndRepeatedErrors", Flags)
 bool FD7Blocked::RunTest(const FString& Parameters)
 {

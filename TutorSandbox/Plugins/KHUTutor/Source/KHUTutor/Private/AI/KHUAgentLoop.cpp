@@ -353,7 +353,7 @@ void FKHUAgentLoop::Cancel()
         CancelledRequests.Add(MakeShared<FJsonValueObject>(U));
         if (CancelledRequests.Num() > Config.Context.MaxMessages) { CancelledRequests.RemoveAt(0); }
     }
-    bPendingRequest = false; ++Generation; Chat->Cancel(); Executor->Cancel(); PendingTools.Reset(); Messages.Reset(); CurrentRecordContext.Reset();
+    bPendingRequest = false; PauseReason = EKHUPauseReason::None; ++Generation; Chat->Cancel(); Executor->Cancel(); PendingTools.Reset(); Messages.Reset(); CurrentRecordContext.Reset();
     Notify(EKHUAgentState::Idle, TEXT("작업을 취소했습니다.")); Event = {};
 }
 TSharedRef<FJsonObject> FKHUAgentLoop::Receipt() const

@@ -56,7 +56,7 @@ $index = Join-Path $report 'index.json'
 if (-not (Test-Path -LiteralPath $index)) { throw 'Automation report missing; zero discovered tests is not a pass.' }
 $summary = Get-Content -LiteralPath $index -Raw -Encoding utf8 | ConvertFrom-Json
 # all discovered tests must pass; bump the count when tests are added or removed
-$expectedTests = 177
+$expectedTests = 178
 $discovered = $summary.succeeded + $summary.succeededWithWarnings + $summary.failed + $summary.notRun + $summary.inProcess
 Write-Output ("KHUTutor automation: discovered {0}, succeeded {1}, with warnings {2}, failed {3}, not run {4}, in process {5}" -f $discovered, $summary.succeeded, $summary.succeededWithWarnings, $summary.failed, $summary.notRun, $summary.inProcess)
 if ($discovered -ne $expectedTests -or $summary.succeeded -ne $discovered) {
