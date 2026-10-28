@@ -10,4 +10,4 @@ This repository contains no copied third-party source code. The plugin builds ag
 
 Projects consulted for comparison only, without copying code: [chongdashu/unreal-mcp](https://github.com/chongdashu/unreal-mcp) (MIT) and [kevinpbuckley/VibeUE](https://github.com/kevinpbuckley/VibeUE) (MIT).
 
-`Resources/KHUMark.svg` reproduces the Kyung Hee University mark for this university course project. It is a trademark of the university and is not licensed for other use.
+`Resources/KHUMark.svg` and the poster in `docs/poster/` reproduce the Kyung Hee University mark for this university course project. It is a trademark of the university and is not licensed for other use.

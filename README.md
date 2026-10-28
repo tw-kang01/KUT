@@ -4,6 +4,21 @@
 
 경희대학교 게임엔진기초 수업의 실습 과제를 기준으로 만들었고, 2026 KHU AI Challenge 출품작입니다. KUT는 '커트'라고 읽습니다. 에디터의 플러그인 목록에는 KHU UE Tutor로, 메뉴에는 KHU Tutor로 나옵니다.
 
+## 영상과 포스터
+
+| 소개 영상 | 시연 영상 |
+|:---:|:---:|
+| [![KUT 소개 영상](https://img.youtube.com/vi/0_8qXlKh5Og/maxresdefault.jpg)](https://youtu.be/0_8qXlKh5Og) | [![KUT 시연 영상](https://img.youtube.com/vi/v2zlMayyVQM/maxresdefault.jpg)](https://youtu.be/v2zlMayyVQM) |
+| 왜 만들었고 무엇을 확인했는지 | 설치부터 Practice4 과제 풀이, 학습 기록까지 |
+
+포스터(작품 소개 자료, A4 3쪽)는 [PDF](docs/poster/KUT_poster.pdf)로 볼 수 있습니다.
+
+<p align="center">
+  <a href="docs/poster/KUT_poster.pdf"><img src="docs/poster/page1.jpg" width="32%" alt="작품 소개 자료 1쪽"></a>
+  <a href="docs/poster/KUT_poster.pdf"><img src="docs/poster/page2.jpg" width="32%" alt="작품 소개 자료 2쪽"></a>
+  <a href="docs/poster/KUT_poster.pdf"><img src="docs/poster/page3.jpg" width="32%" alt="작품 소개 자료 3쪽"></a>
+</p>
+
 ## 배경
 
 이 프로젝트는 게임엔진기초 수업에서 언리얼을 처음 배우며 겪은 어려움에서 시작했습니다. 엔진이 워낙 넓어서 어디서부터 익혀야 할지 감을 잡기 어려웠습니다. Window 메뉴의 최상위 항목만 22개입니다. 과제에서 오류가 나면 에디터가 오류 난 노드나 줄은 알려 주지만, 실행선과 참조, 값 가운데 어디에서 무엇이 틀렸는지 정확히 알기는 어려웠습니다.
@@ -180,6 +195,7 @@ templates/Config/          학생 패키지에 덮어쓰는 설정 (반복 상�
 scripts/                   빌드, 테스트, 패키징 스크립트
 fixtures/                  자동화 테스트가 읽는 로그와 응답 샘플
 docs/INSTALL_KO.md         설치 안내
+docs/poster/               포스터(작품 소개 자료) PDF와 쪽 이미지
 ```
 
 ## 참고문헌
