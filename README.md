@@ -6,10 +6,9 @@
 
 ## 영상과 포스터
 
-| 소개 영상 | 시연 영상 |
-|:---:|:---:|
-| [![KUT 소개 영상](https://img.youtube.com/vi/0_8qXlKh5Og/maxresdefault.jpg)](https://youtu.be/0_8qXlKh5Og) | [![KUT 시연 영상](https://img.youtube.com/vi/v2zlMayyVQM/maxresdefault.jpg)](https://youtu.be/v2zlMayyVQM) |
-| 왜 만들었고 무엇을 확인했는지 | 설치부터 Practice4 과제 풀이, 학습 기록까지 |
+[![KUT 소개와 사용법 영상](https://img.youtube.com/vi/5IrSETSlqII/maxresdefault.jpg)](https://www.youtube.com/watch?v=5IrSETSlqII)
+
+1부에서는 KUT를 왜 만들었고 무엇을 확인했는지 소개합니다. 2부([3:51](https://www.youtube.com/watch?v=5IrSETSlqII&t=231s))에서는 설치부터 Practice4 과제 풀이와 학습 기록까지 따라갑니다.
 
 포스터(작품 소개 자료, A4 3쪽)는 [PDF](docs/poster/KUT_poster.pdf)로 볼 수 있습니다.
 
