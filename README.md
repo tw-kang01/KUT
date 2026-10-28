@@ -194,11 +194,12 @@ scripts/                   빌드, 테스트, 패키징 스크립트
 fixtures/                  자동화 테스트가 읽는 로그와 응답 샘플
 docs/INSTALL_KO.md         설치 안내
 docs/poster/               포스터(작품 소개 자료) PDF와 쪽 이미지
+docs/참고자료.md           근거로 쓴 자료의 목록과 쓰임
 ```
 
 ## 참고문헌
 
-근거로 든 논문은 CCF, CORE, JUFO 같은 공개 등급에서 모두 최상위인 학술지와 학회의 것만 썼습니다. [7]~[9]와 [11]은 평가 도구의 원 출처이고 [5]와 [6]은 공개 자료입니다.
+근거로 든 논문은 CCF, CORE, JUFO 같은 공개 등급에서 모두 최상위인 학술지와 학회의 것만 썼습니다. [7]~[9]와 [11]은 평가 도구의 원 출처이고 [5]와 [6]은 공개 자료입니다. 각 자료를 어디에 어떻게 썼는지와 전체 목록은 [docs/참고자료.md](docs/참고자료.md)에 있습니다.
 
 1. Ko, A. J., Myers, B. A., Coblenz, M. J., & Aung, H. H. (2006). An exploratory study of how developers seek, relate, and collect relevant information during software maintenance tasks. *IEEE Transactions on Software Engineering*, 32(12), 971–987.
 2. Bastani, H., et al. (2025). Generative AI without guardrails can harm learning: Evidence from high school mathematics. *Proceedings of the National Academy of Sciences*, 122(26), e2422633122.
